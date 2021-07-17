@@ -12,21 +12,21 @@ public class Game extends JFrame{
      */
 
     public static void main(String[] args) {
-        Game game = new Game();
+        new Game();
     }
 
 
 
     public Game() {
+        this.setTitle("Daniel's && Benjamin's game");
         this.setVisible(true);
         this.setSize(Consts.WINDOW_WIDTH,Consts.WINDOW_HIGHT);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(null);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        this.setFocusable(true);
-        this.requestFocus();
-        this.setAlwaysOnTop(true);
+
+
 
         GameScene gameScene = new GameScene();
 

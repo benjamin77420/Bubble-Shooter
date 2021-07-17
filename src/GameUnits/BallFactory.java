@@ -1,5 +1,7 @@
 package GameUnits;
 
+import Consts.Consts;
+
 import java.awt.*;
 import java.util.Random;
 
@@ -40,7 +42,7 @@ public class BallFactory implements Factory{
         creating a ball with a random color
      */
     public Color getRandomColor(){
-        int random = rand.nextInt(4);
+        int random = rand.nextInt(Consts.STARTING_ROW_MEDIUM);
 
         switch (random){
             case 0:
@@ -51,6 +53,12 @@ public class BallFactory implements Factory{
                 return Color.GREEN;
             case 3:
                 return Color.PINK;
+            case 4:
+                return Color.CYAN;
+            case 5:
+                return Color.GRAY;
+            case 6:
+                return Color.MAGENTA;
             default:
                 throw new IllegalArgumentException("Unknown random number was given for color selection process");
         }

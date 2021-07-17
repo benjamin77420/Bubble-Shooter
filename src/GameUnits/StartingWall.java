@@ -28,13 +28,39 @@ public class StartingWall {
                                 (i/2)*Consts.ROW_DISTANCE + Consts.WINDOW_HEADER:
                                 (i/2)*Consts.ROW_DISTANCE+Consts.ROW_DISTANCE/2 + Consts.WINDOW_HEADER)
                 );
-                if(i<Consts.STARTING_ROW_EASY){//the row needs to be visible, changeable by altering the difficulty variable
+                if(i<Consts.STARTING_ROW_MEDIUM){//the row needs to be visible, changeable by altering the difficulty variable
                     newBall.setVisable(true);
                 }
                 row.add(newBall);
             }
 
         }
+    }
+
+    /**
+     * adds a row to the wall of balls
+     */
+    public void addRow(){
+        this.ballRows.remove(Consts.MAX_ROW_PRESENT-1);// makeing room for a new row to be added.
+        for(RowList row: this.ballRows){
+            for(Ball ball: row){//moving all the balls one row down by changeing the Y position value.
+                ball.setLocation(new Point(ball.getLocation().x, ball.getLocation().y+Consts.BALL_SIZE));
+            }
+        }
+
+        RowList newRow = new RowList(!this.ballRows.get(0).isFull());//creating the new row, setting its property based on the first row.
+
+        for(int i=0; i<(newRow.isFull()? Consts.FULL_ROW_COUNT: Consts.SEMI_ROW_COUNT); ++i){
+            Ball newBall = this.factory.creatBall();
+            newBall.setLocation(//setting its location based on the property of the row.
+                    new Point(newRow.isFull()?
+                            i*Consts.BALL_SIZE:
+                            i*Consts.BALL_SIZE+Consts.BALL_RADIUS,Consts.WINDOW_HEADER
+                    ));
+            newBall.setVisable(true);
+            newRow.add(newBall);
+        }
+        this.ballRows.add(0,newRow);
     }
 
     /**
@@ -98,14 +124,17 @@ public class StartingWall {
      * @param row -the index that the ball is located at in the balls rows
      * @param col -the index of the ball in the row it is locaited at
      */
-    public void removeColorStrik(int row, int col){
+    public boolean removeColorStrik(int row, int col){
         markColor(row, col);
+        boolean isSuccessfulShots = false;
         int markedBalls = countMarked();
 
         if(markedBalls > 2){
             removeMarked();
+            isSuccessfulShots = true;
         }
         modifyAllMark(false);
+        return isSuccessfulShots;
     }
 
     /**
@@ -166,14 +195,18 @@ public class StartingWall {
     }
 
     //removing the marked balls
-    public void removeMarked(){
+    public int removeMarked(){
+        int removedAmount = 0;
         for(RowList row: this.ballRows){
             for(Ball ball: row){
                 if(ball.isVisable() && ball.isMark()){
                     ball.setVisable(false);
+                    removedAmount++;
                 }
             }
         }
+
+        return removedAmount;
     }
 
     public void modifyAllMark(boolean markStatus){

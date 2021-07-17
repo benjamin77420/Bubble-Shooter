@@ -13,9 +13,11 @@ public class Player {
     private List<Ball> ballMagazin;
     private final BallFactory ballFactory = BallFactory.getFactory();
     private MovingBall playerMovingBall;
+    private int unsuccessfulShots;
 
     public Player() {
         this.ballMagazin = loadMagazin();
+        this.unsuccessfulShots = 0;
     }
 
     private List<Ball> loadMagazin(){
@@ -29,7 +31,7 @@ public class Player {
     }
 
     /**
-     * @param mousePoint * the currnt location of the courser on the panel
+     * @param mousePoint - the currnt location of the courser on the panel
      */
     public void fire(Point mousePoint){
         //get the status of the moving ball
@@ -60,9 +62,20 @@ public class Player {
         }
     }
 
-
-
     public MovingBall getPlayerMovingBall() {
         return playerMovingBall;
     }
+
+    public int getUnsuccessfulShots() {
+        return unsuccessfulShots;
+    }
+
+    public void setUnsuccessfulShots(int unsuccessfulShots) {
+        this.unsuccessfulShots = unsuccessfulShots;
+    }
+
+    public void incrementUnsuccessfulShots(){
+        this.setUnsuccessfulShots(this.getUnsuccessfulShots()+1);
+    }
+
 }

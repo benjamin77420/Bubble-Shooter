@@ -2,7 +2,6 @@ package MainGame;
 
 import Consts.Consts;
 import GameUnits.Ball;
-import GameUnits.BallFactory;
 import GameUnits.StartingWall;
 import Player.Player;
 
@@ -11,15 +10,11 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class GameScene extends JPanel {
-
+    //GAME VARIABLES
     public Player player = new Player();
     private final StartingWall startingWall = new StartingWall();
-
-
     public Point point = new Point();
-    public static void main(String[] args) {
-        GameScene main = new GameScene();
-    }
+    JLabel gameOverLabel= new JLabel("GAME OVER!!!!!!");
 
     public GameScene(){
         this.init();//create the panel
@@ -29,6 +24,10 @@ public class GameScene extends JPanel {
                 if(player.getPlayerMovingBall() != null && player.getPlayerMovingBall().isVisable()){//the ball exists and is moving
                     checkBallProximity();//chcek if the ball is close hitting a stationery ball
                 }
+                if(this.player.getUnsuccessfulShots() >= 5){
+                    this.startingWall.addRow();
+                    this.player.setUnsuccessfulShots(0);
+                }
                 repaint();
             }
         }).start();
@@ -36,8 +35,14 @@ public class GameScene extends JPanel {
 
     public void init() {
         this.setVisible(true);
-        this.setSize(Consts.WINDOW_WIDTH,Consts.WINDOW_HIGHT);
+        this.setDoubleBuffered(true);
+        this.setSize(Consts.WINDOW_WIDTH, Consts.WINDOW_HIGHT);
         this.setLayout(null);
+
+        gameOverLabel.setBounds(100,100, 100, 20);
+        gameOverLabel.setVisible(true);
+
+        this.add(gameOverLabel);
     }
 
     public void checkBallProximity(){
@@ -89,8 +94,12 @@ public class GameScene extends JPanel {
         newBall.setVisable(true);//making the new ball visible
         startingWall.getBallRows().get(row).set(col, newBall);//setting a new ball in the impact location
 
-        startingWall.removeColorStrik(row, col);//removing a color stike
-        startingWall.removeFloatingBalls();//removing floating balls
+        if(!startingWall.removeColorStrik(row, col)){//removing a color stike
+            this.player.incrementUnsuccessfulShots();
+        }else{
+            startingWall.removeFloatingBalls();//removing floating balls
+        }
+
     }
 
 
